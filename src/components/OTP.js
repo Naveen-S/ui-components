@@ -60,7 +60,7 @@ const OTP = () => {
 
   const render = () => {
     return otpArr.map((otp, index) => {
-      return (<input key={index} type="text" value={otp}
+      return (<input className='border-2 w-16 h-16 p-1 m-1 border-amber-300 rounded-md outline-emerald-500 text-emerald-700 text-center' key={index} type="text" value={otp}
         ref={(el) => { inputRef.current[index] = el; }}
         onChange={(e) => { handleOnChange(e, index); }}
         onKeyDown={(e) => { handleKeyDown(e, index); }}
