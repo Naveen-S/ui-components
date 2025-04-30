@@ -1,9 +1,12 @@
-import OTP from "@/components/OTP";
+import ComponentLinkContainer from "@/components/ComponentLinkContainer";
 
 export default function Home() {
   return (
-    <div className="flex justify-center">
-      <OTP />
+    <div className="flex flex-col gap-3 py-3 justify-center items-center">
+      <div className="flex m-4">
+        <ComponentLinkContainer to={"/otp"}> OTP </ComponentLinkContainer>
+        <ComponentLinkContainer to={"/chips"}> Chips </ComponentLinkContainer>
+      </div>
     </div>
   );
 }
