@@ -6,6 +6,7 @@ export default function Home() {
       <div className="flex m-4">
         <ComponentLinkContainer to={"/otp"}> OTP </ComponentLinkContainer>
         <ComponentLinkContainer to={"/chips"}> Chips </ComponentLinkContainer>
+        <ComponentLinkContainer to={"/like"}> Like </ComponentLinkContainer>
       </div>
     </div>
   );
