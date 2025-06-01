@@ -7,6 +7,7 @@ export default function Home() {
         <ComponentLinkContainer to={"/otp"}> OTP </ComponentLinkContainer>
         <ComponentLinkContainer to={"/chips"}> Chips </ComponentLinkContainer>
         <ComponentLinkContainer to={"/like"}> Like </ComponentLinkContainer>
+        <ComponentLinkContainer to={"/nestedCheckbox"}> Nested Checkbox </ComponentLinkContainer>
       </div>
     </div>
   );
