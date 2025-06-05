@@ -10,6 +10,7 @@ export default function Home() {
         <ComponentLinkContainer to={"/nestedCheckbox"}> Nested Checkbox </ComponentLinkContainer>
         <ComponentLinkContainer to={"/explorer"}> File Explorer </ComponentLinkContainer>
         <ComponentLinkContainer to={"/traffic"}> Traffic Lights </ComponentLinkContainer>
+        <ComponentLinkContainer to={"/star"}> Star </ComponentLinkContainer>
       </div>
     </div>
   );
