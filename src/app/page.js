@@ -12,6 +12,7 @@ export default function Home() {
         <ComponentLinkContainer to={"/traffic"}> Traffic Lights </ComponentLinkContainer>
         <ComponentLinkContainer to={"/star"}> Star </ComponentLinkContainer>
         <ComponentLinkContainer to={"/carousal"}> Carousal </ComponentLinkContainer>
+        <ComponentLinkContainer to={"/counter"}> Counter </ComponentLinkContainer>
       </div>
     </div>
   );
