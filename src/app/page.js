@@ -13,6 +13,7 @@ export default function Home() {
         <ComponentLinkContainer to={"/star"}> Star </ComponentLinkContainer>
         <ComponentLinkContainer to={"/carousal"}> Carousal </ComponentLinkContainer>
         <ComponentLinkContainer to={"/counter"}> Counter </ComponentLinkContainer>
+        <ComponentLinkContainer to={"/dataTable"}>  Data Table </ComponentLinkContainer>
       </div>
     </div>
   );

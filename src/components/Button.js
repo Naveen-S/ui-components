@@ -1,7 +1,6 @@
 import React from 'react';
 
 const Button = ({ children, disabled, ...rest }) => {
-  console.log(disabled);
   if (disabled) {
     return (
       <button
