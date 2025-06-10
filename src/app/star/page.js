@@ -1,8 +1,9 @@
 "use client";
-import StarRating from '@/components/StarRating';
-import React, { useState } from 'react';
 
-const page = () => {
+import React, { useState } from 'react';
+import StarRating from '@/components/StarRating';
+
+const Star = () => {
   const [selected, setSelected] = useState(-1);
   return (
     <div>
@@ -11,4 +12,4 @@ const page = () => {
   );
 };
 
-export default page;
+export default Star;

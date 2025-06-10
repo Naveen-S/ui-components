@@ -24,7 +24,7 @@ const config = {
   },
 };
 
-const page = () => {
+const TrafficLight = () => {
   // solution 1
   // const [state, setState] = useState(0);
 
@@ -60,4 +60,4 @@ const page = () => {
   );
 };
 
-export default page;
+export default TrafficLight;
