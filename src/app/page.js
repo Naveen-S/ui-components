@@ -15,6 +15,7 @@ export default function Home() {
         <ComponentLinkContainer to={"/counter"}> Counter </ComponentLinkContainer>
         <ComponentLinkContainer to={"/dataTable"}>  Data Table </ComponentLinkContainer>
         <ComponentLinkContainer to={"/transfer"}> Transfer List </ComponentLinkContainer>
+        <ComponentLinkContainer to={"/flight"}> Flight booking </ComponentLinkContainer>
       </div>
     </div>
   );
