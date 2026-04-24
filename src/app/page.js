@@ -4,6 +4,7 @@ export default function Home() {
   return (
     <div className="flex flex-col gap-3 py-3 justify-center items-center">
       <div className="flex m-4 flex-wrap justify-center">
+        <ComponentLinkContainer to={"/DSA"}> DSA Tracker </ComponentLinkContainer>
         <ComponentLinkContainer to={"/otp"}> OTP </ComponentLinkContainer>
         <ComponentLinkContainer to={"/chips"}> Chips </ComponentLinkContainer>
         <ComponentLinkContainer to={"/like"}> Like </ComponentLinkContainer>
@@ -16,6 +17,7 @@ export default function Home() {
         <ComponentLinkContainer to={"/dataTable"}>  Data Table </ComponentLinkContainer>
         <ComponentLinkContainer to={"/transfer"}> Transfer List </ComponentLinkContainer>
         <ComponentLinkContainer to={"/flight"}> Flight booking </ComponentLinkContainer>
+        <ComponentLinkContainer to={"/progress"}> Progress Bar </ComponentLinkContainer>
       </div>
     </div>
   );
