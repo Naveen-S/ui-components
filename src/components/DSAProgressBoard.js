@@ -11,6 +11,7 @@ const pct = (value, total) => {
 };
 
 const MASTERED_REVISION_TARGET = 2;
+const STARRED_MASTERED_REVISION_TARGET = 4;
 
 const formatDate = (value) => {
   return new Date(value).toLocaleDateString("en-IN", {
@@ -30,6 +31,8 @@ const getDaysBetween = (from, to) => {
   const diff = toDate.getTime() - fromDate.getTime();
   return Math.max(0, Math.floor(diff / (1000 * 60 * 60 * 24)));
 };
+const getRevisionTarget = (progress) =>
+  progress?.isStarred ? STARRED_MASTERED_REVISION_TARGET : MASTERED_REVISION_TARGET;
 
 export default function DSAProgressBoard() {
   const [progressMap, setProgressMap] = useState({});
@@ -115,7 +118,8 @@ export default function DSAProgressBoard() {
     (id) => progressMap[id]?.completedOn === getTodayKey(),
   ).length;
   const masteredCount = completedIds.filter(
-    (id) => (progressMap[id]?.masteredRevisionCount || 0) >= MASTERED_REVISION_TARGET,
+    (id) =>
+      (progressMap[id]?.masteredRevisionCount || 0) >= getRevisionTarget(progressMap[id]),
   ).length;
   const masteryPercent = pct(masteredCount, uniqueQuestionCount);
   const todayKey = getTodayKey();
@@ -172,13 +176,16 @@ export default function DSAProgressBoard() {
           ? getDaysBetween(progress.masteryUpdatedOn, todayKey)
           : daysSinceCompleted;
         const masteredRevisionCount = progress.masteredRevisionCount || 0;
+        const revisionTarget = getRevisionTarget(progress);
+        const isMastered = masteredRevisionCount >= revisionTarget;
 
         // Prefer older problems, de-prioritize recently completed ones, and keep
         // surfacing items that have not yet been fully mastered.
         const score =
           daysSinceRevision * 5 +
           daysSinceCompleted * 3 -
-          (masteredRevisionCount >= MASTERED_REVISION_TARGET ? 4 : 0) -
+          (isMastered ? 4 : 0) +
+          (progress.isStarred ? 8 : 0) -
           (daysSinceCompleted < 3 ? 100 : 0);
 
         return {
@@ -278,6 +285,42 @@ export default function DSAProgressBoard() {
     setActivityLog((prev) => (prev.includes(todayKey) ? prev : [...prev, todayKey]));
   };
 
+  const handleStarToggle = (id) => {
+    setProgressMap((prev) => {
+      const current = prev[id] || {};
+
+      return {
+        ...prev,
+        [id]: {
+          ...current,
+          isStarred: !current.isStarred,
+        },
+      };
+    });
+  };
+
+  const renderStarButton = (id, isStarred, compact = false) => {
+    return (
+      <button
+        aria-label={isStarred ? "Unstar hard problem" : "Star as hard problem"}
+        className={`inline-flex items-center justify-center rounded-full border text-xs font-semibold transition-colors ${
+          isStarred
+            ? "border-amber-300 bg-amber-100 text-amber-800 hover:bg-amber-200"
+            : "border-slate-200 bg-white text-slate-600 hover:border-amber-200 hover:bg-amber-50 hover:text-amber-800"
+        } ${compact ? "h-8 w-8" : "h-10 w-10"}`}
+        onClick={(event) => {
+          event.preventDefault();
+          handleStarToggle(id);
+        }}
+        type="button"
+      >
+        <span aria-hidden="true" className={compact ? "text-sm" : "text-base"}>
+          {isStarred ? "★" : "☆"}
+        </span>
+      </button>
+    );
+  };
+
   const clearProgress = () => {
     const confirmed = window.confirm("Clear all saved Namaste DSA progress?");
     if (confirmed) {
@@ -335,11 +378,16 @@ export default function DSAProgressBoard() {
                   </span>
                 )}
                 <span className="rounded-full bg-white/80 px-3 py-1 text-amber-900">
-                  Revision wins {revisionPick.progress?.masteredRevisionCount || 0} / {MASTERED_REVISION_TARGET}
+                  Revision wins {revisionPick.progress?.masteredRevisionCount || 0} / {getRevisionTarget(revisionPick.progress)}
                 </span>
+                {revisionPick.progress?.isStarred && (
+                  <span className="rounded-full bg-amber-900 px-3 py-1 text-white">
+                    Hard for me
+                  </span>
+                )}
               </div>
             </div>
-            <div className="flex flex-col gap-2 sm:flex-row">
+            <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
               <button
                 className="rounded-2xl bg-emerald-600 px-4 py-3 text-sm font-semibold text-white transition-colors hover:bg-emerald-700"
                 onClick={() => handleMasteryUpdate(revisionPick.id, "mastered")}
@@ -354,6 +402,7 @@ export default function DSAProgressBoard() {
               >
                 Not mastered yet
               </button>
+              {renderStarButton(revisionPick.id, !!revisionPick.progress?.isStarred)}
             </div>
           </div>
         ) : (
@@ -423,7 +472,8 @@ export default function DSAProgressBoard() {
             />
           </div>
           <p className="mt-3 text-sm text-indigo-700">
-            Earned after <span className="font-semibold text-indigo-950">{MASTERED_REVISION_TARGET}</span> successful revision passes.
+            Earned after <span className="font-semibold text-indigo-950">{MASTERED_REVISION_TARGET}</span> revision passes,
+            or <span className="font-semibold text-indigo-950">{STARRED_MASTERED_REVISION_TARGET}</span> if the problem is starred as hard.
           </p>
         </section>
       </div>
@@ -517,8 +567,10 @@ export default function DSAProgressBoard() {
                 {module.items.map((item) => {
                   const isDone = completedIdSet.has(item.id);
                   const completionDate = progressMap[item.id]?.completedOn;
-                  const masteredRevisionCount = progressMap[item.id]?.masteredRevisionCount || 0;
-                  const isMastered = masteredRevisionCount >= MASTERED_REVISION_TARGET;
+                  const itemProgress = progressMap[item.id] || {};
+                  const masteredRevisionCount = itemProgress.masteredRevisionCount || 0;
+                  const revisionTarget = getRevisionTarget(itemProgress);
+                  const isMastered = masteredRevisionCount >= revisionTarget;
 
                   return (
                     <label
@@ -536,15 +588,25 @@ export default function DSAProgressBoard() {
                         type="checkbox"
                       />
                       <div className="min-w-0">
-                        <div className="flex flex-wrap items-center gap-2">
-                          <p className="text-sm font-semibold text-slate-900">
-                            {item.id}. {item.title}
-                          </p>
-                          {isMastered && (
-                            <span className="rounded-full bg-indigo-100 px-2 py-1 text-[11px] font-semibold uppercase tracking-wide text-indigo-700">
-                              Mastered
-                            </span>
-                          )}
+                        <div className="flex items-start justify-between gap-3">
+                          <div className="flex flex-wrap items-center gap-2">
+                            <p className="text-sm font-semibold text-slate-900">
+                              {item.id}. {item.title}
+                            </p>
+                            {itemProgress.isStarred && (
+                              <span className="rounded-full bg-amber-100 px-2 py-1 text-[11px] font-semibold uppercase tracking-wide text-amber-700">
+                                Hard
+                              </span>
+                            )}
+                            {isMastered && (
+                              <span className="rounded-full bg-indigo-100 px-2 py-1 text-[11px] font-semibold uppercase tracking-wide text-indigo-700">
+                                Mastered
+                              </span>
+                            )}
+                          </div>
+                          <div className="shrink-0">
+                            {renderStarButton(item.id, !!itemProgress.isStarred, true)}
+                          </div>
                         </div>
                         <p className="mt-1 text-xs text-slate-500">
                           {isDone && completionDate
@@ -553,7 +615,7 @@ export default function DSAProgressBoard() {
                         </p>
                         {isDone && (
                           <p className="mt-1 text-xs text-slate-500">
-                            Revision wins: {masteredRevisionCount} / {MASTERED_REVISION_TARGET}
+                            Revision wins: {masteredRevisionCount} / {revisionTarget}
                           </p>
                         )}
                       </div>
