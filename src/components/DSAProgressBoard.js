@@ -72,11 +72,17 @@ export default function DSAProgressBoard() {
     if (!isHydrated) return;
 
     try {
-      window.localStorage.setItem(
-        STORAGE_KEY,
-        JSON.stringify({
-          progressMap,
-          activityLog,
+      const payload = JSON.stringify({
+        progressMap,
+        activityLog,
+      });
+      window.localStorage.setItem(STORAGE_KEY, payload);
+      window.dispatchEvent(
+        new CustomEvent("namaste-dsa-progress-updated", {
+          detail: {
+            progressMap,
+            activityLog,
+          },
         }),
       );
     } catch {

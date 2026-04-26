@@ -8,6 +8,7 @@ import {
   trackerBuckets,
 } from "./data";
 import DSAProgressBoard from "@/components/DSAProgressBoard";
+import WeeklyMilestoneBoard from "@/components/WeeklyMilestoneBoard";
 
 const statusStyles = {
   Solid: "bg-emerald-100 text-emerald-700 border-emerald-200",
@@ -84,6 +85,8 @@ export default function DSAPage() {
           </div>
         ))}
       </section>
+
+      <WeeklyMilestoneBoard />
 
       <DSAProgressBoard />
 
